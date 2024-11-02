@@ -6,8 +6,7 @@ class Db
 {
     public static function load(string $path)
     {
-        // читаем из файла и формируем пхп массив из json
-        $dataJson = ['prices' => []];
+        $dataJson = json_decode(file_get_contents($path), true);
         return new self($dataJson);
     }
 
