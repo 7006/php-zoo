@@ -18,7 +18,7 @@ class EntryCalculator
         $adultPrice = $this->adultPrice($entry, $prices);
         $seniorPrice = $this->seniorPrice($entry, $prices);
         $childPrice = $this->childPrice($entry, $prices);
-                
+
         return $adultPrice + $seniorPrice + $childPrice;
     }
 
