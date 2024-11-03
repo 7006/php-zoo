@@ -21,4 +21,9 @@ class Db
     {
         return $this->data['prices'];
     }
+
+    public function selectHours()
+    {
+        return $this->data['hours'];
+    }
 }
