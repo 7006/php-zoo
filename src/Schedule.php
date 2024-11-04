@@ -21,6 +21,11 @@ class Schedule
         $this->db = $db;
     }
 
+
+    public function schedule(){
+        return func_num_args() === 0 ? $this->weekSchedule() : $this->daySchedule(func_get_arg(0));
+    }
+
     public function weekSchedule()
     {
     	$week = $this->db->selectHours();
@@ -61,7 +66,5 @@ class Schedule
     //     $openTime = $hours[$entry]['open'];
     //     $closeTime = $this->convertTimeFormat($hours[$entry]['close']);
     // }
-
-   
 }
 
