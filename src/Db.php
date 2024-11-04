@@ -21,4 +21,9 @@ class Db
     {
         return $this->data['prices'];
     }
+
+    public function selectWeek()
+    {
+        return $this->data['hours'];
+    }
 }
