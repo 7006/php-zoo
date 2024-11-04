@@ -39,11 +39,12 @@ class Schedule
     public function daySchedule(string $entry)
     {
         $hours = $this->db->selectHours();
+                
         $openTime = $hours[$entry]['open'];
         $closeTime = $this->convertTimeFormat($hours[$entry]['close']);
         
         $message = sprintf('Open from %sam until %spm', $openTime, $closeTime);
-        return $message;
+        return [$entry => $message];
     }
 
     // private function getTime(string $entry, array $hours)
