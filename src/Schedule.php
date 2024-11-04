@@ -23,7 +23,7 @@ class Schedule
 
     private function getMessage(array $day)
     {
-        return = $this->message($day['open'], $this->convertTimeFormat($day['close']));
+        return $this->message($day['open'], $this->convertTimeFormat($day['close']));
     }
 
     public function __construct($db)
