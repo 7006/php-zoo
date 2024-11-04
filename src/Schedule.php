@@ -4,6 +4,8 @@ namespace PZ;
 
 class Schedule
 {   
+    private const CLOSED_MESSAGE = 'CLOSED';
+
     private $db;
 
     private function convertTimeFormat(int $time)
@@ -11,47 +13,57 @@ class Schedule
         return $time - 12;
     }
 
+    private function isMonday(string $day)
+    {
+        return $day === 'Monday';
+    }
+
     private function message(int $open, int $close)
-    {
-        return sprintf('Open from %sam until %spm', $open, $close);
+    {   
+        return $open === 0 && $close === 0 ? 
+            self::CLOSED_MESSAGE : 
+            sprintf('Open from %sam until %spm', $open, $close)
+        ;
     }
 
-    public function __construct($db)
-    {
-        $this->db = $db;
-    }
+    // private function weekSchedule()
+    // {
+    //     $week = $this->db->selectHours();
 
+    //     $schedule = [];
 
-    public function schedule(){
-        return func_num_args() === 0 ? $this->weekSchedule() : $this->daySchedule(func_get_arg(0));
-    }
+    //     foreach ($week as $day => $hours){
+    //         if ($this->isMonday($day)) {
+    //             $schedule[$day] = self::CLOSED_MESSAGE;
+    //         } else {
+    //             $openTime = $hours['open'];
+    //             $closeTime = $this->convertTimeFormat($hours['close']);
+    //             $message = $this->message($openTime, $closeTime);
+    //             $schedule[$day] = $message;
+    //         } 
+    //     }
+    //     return $schedule;
+    // }
 
-    public function weekSchedule()
-    {
-    	$week = $this->db->selectHours();
-
-        $result = [];
-
-        foreach ($week as $day => $hours){
-            if ($day === 'Monday') {
-                $message = 'CLOSED';
-                $result[$day] = $message;
-            } else {
-                $openTime = $hours['open'];
-                $closeTime = $this->convertTimeFormat($hours['close']);
-                $message = $this->message($openTime, $closeTime);
-                $result[$day] = $message;
-            } 
-        }
-        return $result;
-    }
-
-    public function daySchedule(string $day)
+    private function weekSchedule()
     {
         $week = $this->db->selectHours();
 
-        if ($day === 'Monday') {
-            return [$day => 'CLOSED'];
+        $fn = function ($day) {
+            $open = $day['open'];
+            $close = $this->convertTimeFormat($day['close']);
+            return $this->message($open, $close);
+        };
+
+        return array_map($fn, $week);
+    }
+
+    private function daySchedule(string $day)
+    {
+        $week = $this->db->selectHours();
+
+        if ($this->isMonday($day)) {
+            return [$day => self::CLOSED_MESSAGE];
         } else {
             $openTime = $week[$day]['open'];
             $closeTime = $this->convertTimeFormat($week[$day]['close']);
@@ -61,10 +73,20 @@ class Schedule
         return [$day => $message];
     }
 
-    // private function getTime(string $entry, array $hours)
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
+    public function schedule(){
+        return func_num_args() === 0 ? $this->weekSchedule() : $this->daySchedule(func_get_arg(0));
+    }
+
+    // private function getTime(string $week, array $day)
     // {
-    //     $openTime = $hours[$entry]['open'];
-    //     $closeTime = $this->convertTimeFormat($hours[$entry]['close']);
+    //     $openTime = $day['open'];
+    //     $closeTime = $this->convertTimeFormat($hours['close']);
+    //     $message = $this->message($openTime, $closeTime);
     // }
 }
 
