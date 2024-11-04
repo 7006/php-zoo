@@ -3,8 +3,18 @@
 namespace PZ;
 
 class Schedule
-{
+{   
     private $db;
+
+    private function convertTimeFormat(int $time)
+    {
+        return $time - 12;
+    }
+
+    private function message(int $open, int $close)
+    {
+        return sprintf('Open from %sam until %spm', $open, $close);
+    }
 
     public function __construct($db)
     {
@@ -24,26 +34,26 @@ class Schedule
             } else {
                 $openTime = $hours['open'];
                 $closeTime = $this->convertTimeFormat($hours['close']);
-                $message = sprintf('Open from %sam until %spm', $openTime, $closeTime);
+                $message = $this->message($openTime, $closeTime);
                 $result[$day] = $message;
             } 
         }
         return $result;
     }
 
-    public function daySchedule(string $entry)
+    public function daySchedule(string $day)
     {
         $week = $this->db->selectHours();
 
-        if ($entry === 'Monday') {
-            return [$entry => 'CLOSED'];
+        if ($day === 'Monday') {
+            return [$day => 'CLOSED'];
         } else {
-            $openTime = $week[$entry]['open'];
-            $closeTime = $this->convertTimeFormat($week[$entry]['close']);
-            $message = sprintf('Open from %sam until %spm', $openTime, $closeTime);
+            $openTime = $week[$day]['open'];
+            $closeTime = $this->convertTimeFormat($week[$day]['close']);
+            $message = $this->message($openTime, $closeTime);
         }
     
-        return [$entry => $message];
+        return [$day => $message];
     }
 
     // private function getTime(string $entry, array $hours)
@@ -52,9 +62,6 @@ class Schedule
     //     $closeTime = $this->convertTimeFormat($hours[$entry]['close']);
     // }
 
-    private function convertTimeFormat(int $time)
-    {
-        return $time - 12;
-    }
+   
 }
 
