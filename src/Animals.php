@@ -2,7 +2,7 @@
 
 namespace PZ;
 
-class s
+class Animals
 {
     private $db;
 
