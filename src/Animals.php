@@ -20,11 +20,37 @@ class Animals
                         'name' => $resident['name'],
                         'sex' => $resident['sex'],
                         'age' => $resident['age'],
-                        'species' => $animal['name'],
+                        'species' => $animal['name']
                     ];
                 }
             }
         }
+    }
+
+    public function byId(string $id)
+    {
+        foreach ($this->db->selectAnimals() as $animal) {
+            if ($animal['id'] === $id) {
+                return [
+                    'id' => $animal['id'],
+                    'name' => $animal['name'],
+                    'location' => $animal['location'],
+                    'animals' => $this->residentsNickNames($animal['residents'])
+                ];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private function residentsNickNames(array $residents)
+    {
+        return array_map(fn($resident) => $resident['name'], $residents);
+    }
+
+    public function byIds(array $ids)
+    {
+        
     }
 
     public function byPopularity()
