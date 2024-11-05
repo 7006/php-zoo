@@ -47,7 +47,7 @@ class Animals
         $byIds = [];
 
         foreach ($ids as $id) {
-            if (!($this->byId($id) === null)) {
+            if ($this->byId($id) !== null) {
                 $byIds[] = $this->byId($id);
             }      
         }
