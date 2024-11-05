@@ -13,17 +13,19 @@ class AnimalCount
 
     public function animalCount()
     {
-        $animals = $this->db->selectAnimals();
-        $result = [];
+        $animalCountByBreeds = [];
 
-        foreach ($animals as $animal) {
-            $result[$animal['name']] = count($animal['residents']);
+        foreach ($this->db->selectAnimals() as $animal) {
+           $animalCountByBreeds[$animal['name']] = count($animal['residents']);
         }
-        return $result;
+
+        return $animalCountByBreeds;
     }
 
 	public function animalBreedCount(string $breed)
     {
-        
+        $animalCountByBreeds = $this->animalCount();
+
+        return $animalCountByBreeds[$breed];
     }
 }
