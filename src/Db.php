@@ -26,4 +26,9 @@ class Db
     {
         return $this->data['hours'];
     }
+
+    public function selectAnimals()
+    {
+        return $this->data['animals'];
+    }
 }
