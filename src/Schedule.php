@@ -31,7 +31,7 @@ class Schedule
     {
         return $this->isDayClosed($day)
             ? "CLOSED"
-            : "Open from ${day['open']} until ${day['close']}";
+            : "Open from {$day['open']} until {$day['close']}";
     }
 
     private function isDayClosed(array $day)
