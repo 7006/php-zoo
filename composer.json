@@ -9,6 +9,7 @@
         "psy/psysh": "^0.12.4"
     },
     "scripts": {
-        "fmt": "php-cs-fixer fix ."
+        "fmt": "php-cs-fixer fix .",
+        "psysh": "psysh"
     }
 }
