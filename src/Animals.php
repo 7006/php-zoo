@@ -12,7 +12,7 @@ class Animals
     }
 
     public function byName(string $nickName)
-    {   
+    {
         foreach ($this->db->selectAnimals() as $animal) {
             foreach ($animal['residents'] as $resident) {
                 if ($resident['name'] === $nickName) {
@@ -37,20 +37,25 @@ class Animals
                     'location' => $animal['location'],
                     'animals' => $this->residentsNickNames($animal['residents'])
                 ];
-            } else {
-                return null;
             }
         }
-    }
-
-    private function residentsNickNames(array $residents)
-    {
-        return array_map(fn($resident) => $resident['name'], $residents);
+        return null;
     }
 
     public function byIds(array $ids)
     {
-        
+        $byIds = [];
+
+        foreach ($ids as $id) {
+            $byIds[] = $this->byId($id) === null ? [] : $this->byId($id);
+        }
+
+        return $byIds;
+    }
+
+    private function residentsNickNames(array $residents)
+    {
+        return array_map(fn ($resident) => $resident['name'], $residents);
     }
 
     public function byPopularity()
