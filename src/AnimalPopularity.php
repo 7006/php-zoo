@@ -11,13 +11,24 @@ class AnimalPopularity
         $this->db = $db;
     }
 
-    public function animalsByPopularities()
+    public function animalsByPopularity()
     {
-        
+        $animalsByPopularity = [];
+
+        foreach ($this->db->selectAnimals() as $animal) {
+        	if (!isset($animalsByPopularity[$animal['popularity']])) {
+				$animalsByPopularity[$animal['popularity']] = [$animal['name']];
+        	} else {
+        		$animalsByPopularity[$animal['popularity']][] = $animal['name'];	
+        	}
+        }
+        ksort($animalsByPopularity);
+
+        return $animalsByPopularity;
     }
 
-    public function animalByPopularity(int $rating)
+    public function animalByRating(int $rating)
     {
-        
+        	
     }
 }
