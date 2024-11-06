@@ -9,9 +9,10 @@ trait AnimalMap
 		return func_num_args() === 0 ? $this->byLocation() : $this->optionsHandler(func_get_arg(0));
 	}
 
-	public function optionsHandler(array $options)
+	private function optionsHandler(array $options)
 	{
 		$options = func_get_arg(0);
+		
 		if (isset($options['includeNames']) && $options['includeNames']) {
 			return $this->byLocationName();
 		}
@@ -55,13 +56,4 @@ trait AnimalMap
 
 		return $byLocationNameSex;
 	}
-
-	private function filterResidentsBySex(array $residents, string $sex)
-	{
-		return array_filter($residents, fn ($resident) => $resident['sex'] === $sex);
-	}
-
-	
-
-	
 }
