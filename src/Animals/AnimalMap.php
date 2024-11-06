@@ -15,35 +15,33 @@ trait AnimalMap
 		return $byLocation;
 	}
 
-	//$options = ['includeNames' => true];
-	public function byLocationAndBreeds()
+	public function byLocationName(/*$options = ['includeNames' => true)*/)
 	{	
-		$byLocationAndBreeds = [];
+		$byLocationName = [];
 		
 		foreach ($this->db->selectAnimals() as $animal) {
-			$byLocationAndBreeds[$animal['location']][$animal['name']] = $this->residentsNickNames($animal['residents']);
+			$byLocationName[$animal['location']][$animal['name']] = $this->residentsNickNames($animal['residents']);
 		}
 
-		return $byLocationAndBreeds;
+		return $byLocationName;
 	}
 
-	//$options = ['sex' => female];
-	public function byLocationAndBreedsAndSex()
+	public function byLocationNameSex(/*$options = ['includeNames' => true, 'sex' => female]*/)
 	{	
-		$sex = 'female'; // takes by $options
-		$byLocationAndBreedsAndSex = [];
+		$sex = 'female'; // let's assume already taken from $options
+		$byLocationNameSex = [];
 				
 		foreach ($this->db->selectAnimals() as $animal) {
-			$residents = $animal['residents'];
-			$filteredResidents = $this->filterBySex($residents, $sex);
-			$byLocationAndBreedsAndSex[$animal['location']][$animal['name']] = $this->residentsNickNames($filteredResidents);
+			$filteredResidents = $this->filterBySex($animal['residents'], $sex);
+			$byLocationNameSex[$animal['location']][$animal['name']] = $this->residentsNickNames($filteredResidents);
 		}
 
-		return $byLocationAndBreedsAndSex;
+		return $byLocationNameSex;
 	}
 
 	private function filterBySex(array $residents, string $sex)
 	{
 		return array_filter($residents, fn ($resident) => $resident['sex'] === $sex);
 	}
+
 }

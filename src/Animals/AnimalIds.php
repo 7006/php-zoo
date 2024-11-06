@@ -4,7 +4,7 @@ namespace PZ\Animals;
 
 trait AnimalIds
 {
-    public function byIds(array $ids)
+    public function ByIds(array $ids)
     {
         $byIds = [];
 
