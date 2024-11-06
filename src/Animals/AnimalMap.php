@@ -15,8 +15,9 @@ trait AnimalMap
 		return $byLocation;
 	}
 
-	public function byLocationName(/*$options = ['includeNames' => true)*/)
+	public function byLocationName(array $options)
 	{	
+		$options = func_get_arg(0);
 		$byLocationName = [];
 		
 		foreach ($this->db->selectAnimals() as $animal) {
@@ -26,22 +27,31 @@ trait AnimalMap
 		return $byLocationName;
 	}
 
-	public function byLocationNameSex(/*$options = ['includeNames' => true, 'sex' => female]*/)
+	public function byLocationNameSex(array $options)
 	{	
-		$sex = 'female'; // let's assume already taken from $options
+		$options = func_get_arg(0);
 		$byLocationNameSex = [];
 				
 		foreach ($this->db->selectAnimals() as $animal) {
-			$filteredResidents = $this->filterBySex($animal['residents'], $sex);
+			$filteredResidents = $this->filterResidentsBySex($animal['residents'], $options['sex']);
 			$byLocationNameSex[$animal['location']][$animal['name']] = $this->residentsNickNames($filteredResidents);
 		}
 
 		return $byLocationNameSex;
 	}
 
-	private function filterBySex(array $residents, string $sex)
+	private function filterResidentsBySex(array $residents, string $sex)
 	{
 		return array_filter($residents, fn ($resident) => $resident['sex'] === $sex);
 	}
 
+	public function optionsHandler(array $options)
+	{
+		return func_get_arg(0);
+	}
+
+	public function animalsMap()
+	{
+		return func_num_args() === 0 ? $this->byLocation() : $this->optionsHandler(func_get_arg(0));
+	}
 }
