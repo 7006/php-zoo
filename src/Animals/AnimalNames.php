@@ -4,7 +4,7 @@ namespace PZ\Animals;
 
 trait AnimalNames
 {
-    public function byName(string $nickName)
+    public function byNickName(string $nickName)
     {
         foreach ($this->db->selectAnimals() as $animal) {
             foreach ($animal['residents'] as $resident) {
