@@ -3,7 +3,24 @@
 namespace PZ\Animals;
 
 trait AnimalMap
-{
+{	
+	public function animalsMap()
+	{
+		return func_num_args() === 0 ? $this->byLocation() : $this->optionsHandler(func_get_arg(0));
+	}
+
+	public function optionsHandler(array $options)
+	{
+		$options = func_get_arg(0);
+		if (isset($options['includeNames']) && $options['includeNames']) {
+			return $this->byLocationName();
+		}
+
+		if (isset($options['includeNames']) && $options['includeNames'] && isset($options['sex'])) {
+			return $this->byLocationNameSex($options);
+		}
+	}
+
 	public function byLocation()
 	{	
 		$byLocation = [];
@@ -15,9 +32,8 @@ trait AnimalMap
 		return $byLocation;
 	}
 
-	public function byLocationName(array $options)
+	public function byLocationName()
 	{	
-		$options = func_get_arg(0);
 		$byLocationName = [];
 		
 		foreach ($this->db->selectAnimals() as $animal) {
@@ -45,13 +61,7 @@ trait AnimalMap
 		return array_filter($residents, fn ($resident) => $resident['sex'] === $sex);
 	}
 
-	public function optionsHandler(array $options)
-	{
-		return func_get_arg(0);
-	}
+	
 
-	public function animalsMap()
-	{
-		return func_num_args() === 0 ? $this->byLocation() : $this->optionsHandler(func_get_arg(0));
-	}
+	
 }
