@@ -23,12 +23,7 @@ trait AnimalIds
         $animals = $this->db->selectAnimals();
         $animal = $this->findAnimalById($animal, $id);
 
-        if ($animal) {
-            $residents = $this->residentsNickNames($animal['residents']);
-            return array_merge($animal, ['residents' => $residents]);
-        }
-
-        return null;
+        return $animal ? $this->replaceResidents($animal) : null;
     }
 
     private function findAnimalById(array $animals, string $id)
@@ -40,5 +35,12 @@ trait AnimalIds
         }
 
         return null;
+    }
+
+    private function replaceResidents(array $animal)
+    {
+        $residents = $this->residentsNickNames($animal['residents']);
+
+        return array_merge($animal, ['residents' => $residents]);
     }
 }
