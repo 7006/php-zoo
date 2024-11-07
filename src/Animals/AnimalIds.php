@@ -20,18 +20,25 @@ trait AnimalIds
 
     public function byId(string $id)
     {
-        foreach ($this->db->selectAnimals() as $animal) {
-            if ($animal['id'] === $id) {
-                return [
-                    'id' => $animal['id'],
-                    'name' => $animal['name'],
-                    'location' => $animal['location'],
-                    'animals' => $this->residentsNickNames($animal['residents'])
-                ];
-            }
+        $animals = $this->db->selectAnimals();
+        $animal = $this->findAnimalById($animal, $id);
+
+        if ($animal) {
+            $residents = $this->residentsNickNames($animal['residents']);
+            return array_merge($animal, ['residents' => $residents]);
         }
+
         return null;
     }
 
+    private function findAnimalById(array $animals, string $id)
+    {
+        foreach ($animals as $animal) {
+            if ($animal['id'] === $id) {
+                return $animal;
+            }
+        }
 
+        return null;
+    }
 }
