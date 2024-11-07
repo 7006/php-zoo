@@ -3,73 +3,45 @@
 namespace PZ\Animals;
 
 trait AnimalMap
-{	
-	// public function animalMap()
-	// {
-	// 	return func_num_args() === 0 ? $this->byLocation() : $this->optionsHandler(func_get_arg(0));
-	// }
+{
+    public function animalMap(array $options)
+    {
+        $animals = $this->db->selectAnimals();
 
-	// private function optionsHandler(array $options)
-	// {
-	// 	$options = func_get_arg(0);
-		
-	// 	if (isset($options['includeNames']) && $options['includeNames']) {
-	// 		return $this->byLocationName();
-	// 	}
+        if (isset($options['sex'])) {
+            $animals = $this->filterBySex($animals, $options['sex']);
+        }
 
-	// 	if (isset($options['includeNames']) && $options['includeNames'] && isset($options['sex'])) {
-	// 		return $this->byLocationNameSex($options);
-	// 	}
-	// }
+        return $this->groupByLocation($animals, $options['includeNames'] ?? false);
+    }
 
-	// public function byLocation()
-	// {	
-	// 	$byLocation = [];
-		
-	// 	foreach ($this->db->selectAnimals() as $animal) {
-	// 		$byLocation[$animal['location']][] = $animal['name'];
-	// 	}
+    private function filterBySex(array $animals, string $sex)
+    {
+        $filtered = [];
 
-	// 	return $byLocation;
-	// }
+        foreach ($animals as $animal) {
+            $residents = $this->filterResidentsBySex($animal['residents'], $sex);
 
-	// public function byLocationName()
-	// {	
-	// 	$byLocationName = [];
-		
-	// 	foreach ($this->db->selectAnimals() as $animal) {
-	// 		$byLocationName[$animal['location']][$animal['name']] = $this->residentsNickNames($animal['residents']);
-	// 	}
+            if (count($residents) > 0) {
+                $filtered[] = array_merge($animal, ['residents' => $residents]);
+            }
+        }
 
-	// 	return $byLocationName;
-	// }
+        return $filtered;
+    }
 
-	// public function byLocationNameSex(array $options)
-	// {	
-	// 	$options = func_get_arg(0);
-	// 	$byLocationNameSex = [];
-				
-	// 	foreach ($this->db->selectAnimals() as $animal) {
-	// 		$filteredResidents = $this->filterResidentsBySex($animal['residents'], $options['sex']);
-	// 		$byLocationNameSex[$animal['location']][$animal['name']] = $this->residentsNickNames($filteredResidents);
-	// 	}
+    private function groupByLocation(array $animals, bool $includeNames)
+    {
+        $groups = [];
 
-	// 	return $byLocationNameSex;
-	// }
+        foreach ($animals as ['name' => $name, 'location' => $location , 'residents' => $residents]) {
+            if ($includeNames) {
+                $groups[$location][$name] = $this->residentsNickNames($residents);
+            } else {
+                $groups[$location][] = $name;
+            }
+        }
 
-	public function filterAviariesBySex(array $options)
-	{	
-		$filteredAviaries = [];
-		
-		foreach ($this->db->selectAnimals() as $aviary) {
-			$filteredAviaries[] = [
-				'location' => $aviary['location'],
-				'name' => $aviary['name'],
-				'residents' => $this->filterResidentsBySex($aviary['residents'], $options['sex'])
-			];
-		}
-
-		return $filteredAviaries;
-	}
+        return $groups;
+    }
 }
-
