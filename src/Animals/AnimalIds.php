@@ -33,8 +33,5 @@ trait AnimalIds
         return null;
     }
 
-    private function residentsNickNames(array $residents)
-    {
-        return array_map(fn ($resident) => $resident['name'], $residents);
-    }
+
 }
