@@ -8,12 +8,12 @@ trait ManagersForEmployee
 	{
 		$employees = $this->db->selectEmployees();
 
-		if (str_contains($idOrName, '-')) {
-			$employee = $this->byId($idOrName);
+		if ($idOrName !== ''){
+			$employee = str_contains($idOrName, '-') ? $this->byId($idOrName) : $this->byFirstOrLastName($idOrName);	
 		} else {
-			$employee = $this->byFirstOrLastName($idOrName);
+			return null;
 		}
-
+		
 		return $this->replaceManagers($employee);
 	}
 
