@@ -9,9 +9,30 @@ trait ManagersForEmployee
 		$employees = $this->db->selectEmployees();
 
 		if (str_contains($idOrName, '-')) {
-			return $this->byId($idOrName);
+			$employee = $this->byId($idOrName);
 		} else {
-			return $this->byFirstOrLastName($idOrName);
-		} 
+			$employee = $this->byFirstOrLastName($idOrName);
+		}
+
+		return $this->replaceManagers($employee);
+	}
+
+	private function managersNames(array $employee)
+	{	
+		$managersNames = [];
+
+		foreach ($employee['managers'] as $managerId) {
+			$manager = $this->byId($managerId);
+			$managersNames[] = "{$manager['firstName']} {$manager['lastName']}";
+		}
+		
+		return $managersNames;
+	}
+
+	private function replaceManagers(array $employee)
+	{	
+		$managers = $this->managersNames($employee);
+
+		return array_merge($employee, ['managers' => $managers]);
 	}
 }
