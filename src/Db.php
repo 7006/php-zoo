@@ -31,4 +31,9 @@ class Db
     {
         return $this->data['animals'];
     }
+
+    public function selectEmployees()
+    {
+        return $this->data['employees'];
+    }
 }
