@@ -6,9 +6,9 @@ use PZ\Employees\EmployeesIds;
 
 class Employees
 {
-	use EmployeesIds;
+    use EmployeesIds;
 
-	private $db;
+    private $db;
 
     public function __construct($db)
     {
