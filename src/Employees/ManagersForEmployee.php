@@ -4,35 +4,36 @@ namespace PZ\Employees;
 
 trait ManagersForEmployee
 {
-	public function managersForEmployee(string $idOrName)
-	{
-		$employees = $this->db->selectEmployees();
+    public function managersForEmployee(string $idOrName)
+    {
+        $employee = $this->byId($idOrName);
+        if ($employee) {
+            return $this->replaceManagers($employee);
+        }
 
-		if ($idOrName !== ''){
-			$employee = str_contains($idOrName, '-') ? $this->byId($idOrName) : $this->byFirstOrLastName($idOrName);	
-		} else {
-			return null;
-		}
-		
-		return $this->replaceManagers($employee);
-	}
+        $employee = $this->byFirstOrLastName($idOrName);
+        if ($employee) {
+            return $this->replaceManagers($employee);
+        }
 
-	private function managersNames(array $employee)
-	{	
-		$managersNames = [];
+        return null;
+    }
 
-		foreach ($employee['managers'] as $managerId) {
-			$manager = $this->byId($managerId);
-			$managersNames[] = "{$manager['firstName']} {$manager['lastName']}";
-		}
-		
-		return $managersNames;
-	}
+    private function managersNames(array $employee)
+    {
+        $fn = function ($managerId) {
+            $manager = $this->byId($managerId);
+            return $manager['firstName'] . ' ' . $manager['lastName'];
+        };
 
-	private function replaceManagers(array $employee)
-	{	
-		$managers = $this->managersNames($employee);
+        return array_map($fn, $employee['managers']);
 
-		return array_merge($employee, ['managers' => $managers]);
-	}
+    }
+
+    private function replaceManagers(array $employee)
+    {
+        $managers = $this->managersNames($employee);
+
+        return array_merge($employee, ['managers' => $managers]);
+    }
 }
