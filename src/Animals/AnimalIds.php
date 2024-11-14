@@ -26,7 +26,7 @@ trait AnimalIds
         return $animal ? $this->replaceResidents($animal) : null;
     }
 
-    private function findAnimalById(array $animals, string $id)
+    public function findAnimalById(array $animals, string $id)
     {
         foreach ($animals as $animal) {
             if ($animal['id'] === $id) {

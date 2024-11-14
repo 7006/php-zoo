@@ -2,6 +2,8 @@
 
 namespace PZ\Employees;
 
+use PZ\Animals;
+
 trait EmployeeCoverage
 {
 	public function employeeCoverage(array $options)
@@ -9,14 +11,15 @@ trait EmployeeCoverage
 		if (empty($options)) {
 			$employees = $this->db->selectEmployees();
 			$result = [];
-			
+
 			foreach ($employees as $employee) {
-				$formatEmbployee = $this->employeeFormat($employee);
-				$key = key($formatEmbployee);
-				$breeds =array_values($formatEmbployee);
-				$result[$key] = $breeds[0];
-			}
-			return $result;
+               $formatEmbployee = $this->employeeFormat($employee);
+               $key = key($formatEmbployee);
+               $breeds = array_values($formatEmbployee);
+               $result[$key] = $breeds[0];
+	        }
+	        
+	        return $result;
 		}
 		
 		if (isset($options['id'])) {
@@ -30,6 +33,8 @@ trait EmployeeCoverage
 			$employee = $this->byFirstOrLastName($name);
 			return $this->employeeFormat($employee);
 		}
+
+		return null;
 	}
 
 	public function employeeFormat(array $employee)
@@ -44,23 +49,13 @@ trait EmployeeCoverage
 		$animals = $this->db->selectAnimals();
 		$animalsBreedsIds = $employee['responsibleFor'];
 		$responsibleFor = [];
+		$a = new Animals($db);
 
 		foreach ($animalsBreedsIds as $animalBreedId) {
-			$animal = $this->findAnimalById($animals, $animalBreedId);
+			$animal = $a->findAnimalById($animals, $animalBreedId);
 			$responsibleFor[] = $animal['name'];
 		}
 
 		return $responsibleFor;
 	}
-
-	public function findAnimalById(array $animals, string $id)
-    {
-        foreach ($animals as $animal) {
-            if ($animal['id'] === $id) {
-                return $animal;
-            }
-        }
-
-        return null;
-    }
 }
