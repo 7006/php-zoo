@@ -5,11 +5,9 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.64",
-        "psy/psysh": "^0.12.4"
+        "friendsofphp/php-cs-fixer": "^3.64"
     },
     "scripts": {
-        "fmt": "php-cs-fixer fix .",
-        "psysh": "psysh"
+        "fmt": "php-cs-fixer fix ."
     }
 }
