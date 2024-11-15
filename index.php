@@ -13,3 +13,9 @@ $calc = new EntryCalculator($db);
 $schedule = new Schedule($db);
 $animals = new Animals($db);
 $employees = new Employees($db);
+
+$result = $employees->employeeCoverage([]);
+
+echo '<pre>';
+print_r($result);
+echo '</pre>';
